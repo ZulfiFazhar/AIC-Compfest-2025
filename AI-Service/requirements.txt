@@ -1,0 +1,5 @@
+Flask
+Werkzeug
+ultralytics
+aiohttp # For async HTTP requests if needed
+asyncio # Python's built-in async library
