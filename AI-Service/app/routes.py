@@ -1,9 +1,23 @@
 from flask import Blueprint, request, jsonify, current_app
-from .services.detection_service import detect_objects_async
+from .services.detection_service import detect_objects_async, model
 from .utils.image_processing import allowed_file
 import asyncio
 
 api = Blueprint('api', __name__)
+
+@api.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint to verify service status."""
+    try:
+        status = {
+            "status": "healthy",
+            "service": "AI Detection Service",
+            "model_loaded": model is not None
+        }
+        return jsonify(status), 200
+    except Exception as e:
+        current_app.logger.error(f"Health check failed: {e}")
+        return jsonify({"status": "unhealthy", "error": str(e)}), 500
 
 @api.route('/detect', methods=['POST'])
 async def detect_objects():
