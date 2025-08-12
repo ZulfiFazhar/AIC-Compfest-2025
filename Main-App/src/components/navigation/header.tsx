@@ -59,14 +59,11 @@ export default function Header() {
               ))}
             </div>
             <Suspense>{/* <ModeToggle /> */}</Suspense>
-            <div className="flex gap-2">
-              <Link
-                href="/auth"
-                className={buttonVariants({ variant: "default" })}
-              >
-                Get Started
-              </Link>
-            </div>
+          </div>
+          <div className="flex items-center">
+            <Link href="/auth">
+              <Button className="rounded-full">Get Started</Button>
+            </Link>
           </div>
         </nav>
 
