@@ -12,12 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Tabs,
-  TabsContent,
-  // TabsList,
-  // TabsTrigger
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -129,10 +124,10 @@ export function AuthButton({
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList> */}
+          </TabsList>
 
           {error && (
             <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">

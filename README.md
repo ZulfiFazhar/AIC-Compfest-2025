@@ -1,22 +1,22 @@
 <div align="center">
     <div>
-        <img height="150px" src="./Assets/logo.png" alt="SiJalu AI Logo"/>
+        <img height="150px" src="./Assets/logo.png" alt="Raksha AI Logo"/>
     </div>
     <div>
-            <h3><b>SiJalu AI</b></h3>
+            <h3><b>Raksha AI</b></h3>
             <p><i>Sistem Jaga Lintas Ruang - AI-Powered Crime Detection for a Safer Bandung</i></p>
     </div>      
 </div>
 <br>
-<h1 align="center">SiJalu AI - Compfest AI Innovation Challenge</h1>
+<h1 align="center">Raksha AI - Compfest AI Innovation Challenge</h1>
 <div align="center">
 
-<img src="./Assets/Pitch-Deck.png" alt="SiJalu AI Preview"/>
+<img src="./Assets/Pitch-Deck.png" alt="Raksha AI Preview"/>
 
 </div>
 <br>
 
-<b>SiJalu AI</b> is an advanced surveillance system that leverages Artificial Intelligence to detect criminal activities in real-time from CCTV feeds across Bandung. By identifying suspicious behaviors and potential threats, SiJalu AI aims to enhance public safety, accelerate emergency response, and create a more secure urban environment for all citizens.
+<b>Raksha AI</b> is an advanced surveillance system that leverages Artificial Intelligence to detect criminal activities in real-time from CCTV feeds across Bandung. Named after the Sanskrit word meaning "to protect", Raksha AI embodies our mission to safeguard the city of Bandung from suspicious activities using cutting-edge AI technology. By identifying suspicious behaviors and potential threats, Raksha AI aims to enhance public safety, accelerate emergency response, and create a more secure urban environment for all citizens.
 
 <br>
 
@@ -47,7 +47,7 @@
 
 ## Live Demo
 
-[https://sijalu-ai.vercel.app/](https://sijalu-ai.vercel.app/)
+[https://raksha-ai.vercel.app/](https://raksha-ai.vercel.app/)
 
 ---
 
@@ -64,8 +64,8 @@
 ### Clone the Project
 
 ```bash
-git clone https://github.com/your-repo/sijalu-ai.git
-cd sijalu-ai
+git clone https://github.com/ZulfiFazhar/raksha-ai.git
+cd raksha-ai
 
 # Start the Frontend
 cd Main-App
@@ -123,10 +123,10 @@ FLASK_ENV=development
 ## Architecture
 
 <p align="center">
-  <img src="./Assets/SiJalu-AI-Architecture.png" width="700">
+  <img src="./Assets/Raksha-AI-Architecture.png" width="700">
 </p>
 
-This diagram illustrates the system architecture of the SiJalu AI application.
+This diagram illustrates the system architecture of the Raksha AI application.
 
 ---
 
