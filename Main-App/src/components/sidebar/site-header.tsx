@@ -1,28 +1,12 @@
 "use client";
 
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-  SidebarIcon,
-} from "lucide-react";
+import { AudioWaveform, Command, GalleryVerticalEnd } from "lucide-react";
 
-// import { SearchForm } from "@/components/search-form";
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-//   BreadcrumbSeparator,
-// } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-// import { Separator } from "@/components/ui/separator";
-import { useSidebar } from "@/components/ui/sidebar";
 import { TeamSwitcher } from "./team-switcher";
+import { NavUser } from "./nav-user";
+import { NavData } from "@/types/nav-data";
 
 export function SiteHeader() {
-  //   const { toggleSidebar } = useSidebar();
   const teams = [
     {
       name: "Acme Inc",
@@ -42,10 +26,10 @@ export function SiteHeader() {
   ];
 
   return (
-    <header className="bg-background sticky top-0 z-50 flex w-full items-center border-b">
-      <div className="flex h-(--header-height) w-fit items-center gap-2 px-4">
+    <header className="bg-background sticky top-0 z-100 flex w-full items-center border-b">
+      <div className="h-(--header-height) w-full flex items-center justify-between px-4">
         <TeamSwitcher teams={teams} />
-        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
+        <NavUser user={NavData.user} />
       </div>
     </header>
   );

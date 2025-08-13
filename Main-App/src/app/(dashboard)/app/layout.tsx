@@ -1,10 +1,7 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/sidebar/site-header";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { MobileHeader } from "@/components/sidebar/mobile-header";
 
 export const iframeHeight = "800px";
 
@@ -15,6 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
+        <MobileHeader />
         <div className="flex flex-1">
           <AppSidebar />
           <SidebarInset>{children}</SidebarInset>
