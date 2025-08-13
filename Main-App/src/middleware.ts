@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   try {
-    // Simple cookie check for better-auth session
     const sessionCookie = request.cookies.get("better-auth.session_token");
 
     if (!sessionCookie?.value) {
@@ -17,5 +16,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*"], // Protect all /app routes
+  matcher: ["/app/:path*", "/user/:path*"],
 };
