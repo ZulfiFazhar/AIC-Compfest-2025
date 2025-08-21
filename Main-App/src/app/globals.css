@@ -165,3 +165,17 @@
     transform: rotate(90deg);
   }
 }
+
+.gradient {
+  background-color: rgb(54, 182, 214);
+  background-image: radial-gradient(
+      at 68% 21%,
+      rgb(46, 173, 139) 0,
+      transparent 77%
+    ),
+    radial-gradient(at 80% 7%, rgb(109, 40, 217) 0, transparent 71%),
+    radial-gradient(at 32% 80%, rgb(141, 159, 250) 0, transparent 25%),
+    radial-gradient(at 98% 77%, rgb(47, 164, 218) 0, transparent 20%),
+    radial-gradient(at 76% 18%, rgb(221, 214, 254) 0, transparent 89%),
+    radial-gradient(at 30% 50%, rgb(159, 18, 57) 0, transparent 74%);
+}
