@@ -1,18 +1,26 @@
-import Header from "@/components/navigation/header";
-import { Hero } from "@/components/landing-page/hero";
-import { About } from "@/components/landing-page/about";
-import { Features } from "@/components/landing-page/features";
-import { Privacy } from "@/components/landing-page/privacy";
-import Footer from "@/components/navigation/footer";
+"use client";
 
-export default function MainPage() {
+import { Navbar } from "@/components/landing/Navbar";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { WhyChooseUsSection } from "@/components/landing/WhyChooseUsSection";
+import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
+import { PricingSection } from "@/components/landing/PricingSection";
+import { CallToActionSection } from "@/components/landing/CallToActionSection";
+import { Footer } from "@/components/landing/Footer";
+
+export default function Home() {
   return (
-    <div className="min-h-screen p-8">
-      <Header />
-      <Hero />
-      <About />
-      <Features />
-      <Privacy />
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+      <Navbar />
+      <HeroSection />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <WhyChooseUsSection /> {/* New section */}
+      <TestimonialsSection />
+      <PricingSection /> {/* New section */}
+      <CallToActionSection />
       <Footer />
     </div>
   );

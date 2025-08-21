@@ -43,7 +43,7 @@ export default function UserLayout({
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Loading...</div>
+        <div className="text-center loader"></div>
       </div>
     );
   }
