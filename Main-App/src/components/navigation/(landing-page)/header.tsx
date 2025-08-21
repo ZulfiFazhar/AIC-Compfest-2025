@@ -7,28 +7,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
-import Image from "next/image";
 
 const TopMenu = [
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "FAQ", href: "#faq" },
+  { name: "Fitur", href: "#features" },
+  { name: "Cara Kerja", href: "#how-it-works" },
+  { name: "Harga", href: "#pricing" },
 ];
 
 const Logo = () => {
   return (
     <Link href="/" className="flex space-x-2 py-3 items-center">
       <h1 className="text-xl font-bold flex items-center gap-2">
-        <Image
-          src="/globe.svg"
-          alt="StarterKitPro Blocks"
-          width={24}
-          height={24}
-        />
+        <Shield className="size-7 text-primary" />
         Raksha.ai
       </h1>
     </Link>
@@ -61,8 +55,13 @@ export default function Header() {
             <Suspense>{/* <ModeToggle /> */}</Suspense>
           </div>
           <div className="flex items-center">
-            <Link href="/auth">
-              <Button className="rounded-full">Get Started</Button>
+            <Link href="/auth/signin">
+              <Button className="rounded-full" variant="secondary">
+                Login
+              </Button>
+            </Link>
+            <Link href="/auth/signup">
+              <Button className="rounded-full ml-2">Daftar</Button>
             </Link>
           </div>
         </nav>
@@ -77,8 +76,6 @@ export default function Header() {
                 <Suspense>{/* <ModeToggle /> */}</Suspense>
                 <SheetTrigger asChild>
                   <Menu className="size-6" />
-                  {/* <Button variant={"outline"} size={"icon"}>
-                  </Button> */}
                 </SheetTrigger>
               </div>
               <SheetContent side="bottom" className="overflow-y-auto pt-0 pb-5">
@@ -91,7 +88,7 @@ export default function Header() {
                   {TopMenu.map((menu, idx) => (
                     <a
                       key={idx}
-                      href="#"
+                      href={menu.href}
                       className="font-semibold text-lg py-2"
                     >
                       {menu.name}
@@ -101,13 +98,22 @@ export default function Header() {
                 <div className="border-t pt-4 px-4">
                   <div className="mt-2 flex flex-col gap-2">
                     <Link
-                      href="/auth"
+                      href="/auth/signin"
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "py-5"
+                      )}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/auth/signup"
                       className={cn(
                         buttonVariants({ variant: "default" }),
                         "py-5"
                       )}
                     >
-                      Get Started
+                      Daftar
                     </Link>
                   </div>
                 </div>

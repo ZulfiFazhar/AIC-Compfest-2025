@@ -1,26 +1,33 @@
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { SiteHeader } from "@/components/sidebar/site-header";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+"use client";
 
-export const iframeHeight = "800px";
+import { useState } from "react";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import { DashboardHeader } from "@/components/dashboard/header";
 
-export const description = "A sidebar with a header and a search form.";
+export default function DashboardLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="[--header-height:calc(--spacing(14))]">
-      <SidebarProvider className="flex flex-col">
-        <SiteHeader />
-        <div className="flex flex-1">
-          <AppSidebar />
-          <SidebarInset>{children}</SidebarInset>
-          <AppSidebar />
-        </div>
-      </SidebarProvider>
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      
+      {/* Header is now a sibling, fixed to top */}
+      <DashboardHeader 
+        sidebarOpen={sidebarOpen} 
+        setSidebarOpen={setSidebarOpen} 
+        title="Dashboard" 
+      />
+      
+      {/* Main content area, pushed down by header height and pushed right by sidebar */}
+      <div className={`flex-1 transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'} pt-16`}>
+        <main className="p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
