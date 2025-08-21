@@ -11,7 +11,11 @@ interface User {
   emailVerified: boolean;
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function UserLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +43,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Loading...</div>
+        <div className="text-center loader"></div>
       </div>
     );
   }
@@ -47,22 +51,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation Header */}
-      <header className="border-b border-border bg-card">
+      <header className="sticky top-0 border-b border-border bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/app" className="text-xl font-bold text-primary">
+              <Link href="/user" className="text-xl font-bold text-primary">
                 My App
               </Link>
               <nav className="hidden md:flex space-x-4">
                 <Link
-                  href="/app"
+                  href="/user"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Dashboard
                 </Link>
                 <Link
-                  href="/app/profile"
+                  href="/user/profile"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Profile

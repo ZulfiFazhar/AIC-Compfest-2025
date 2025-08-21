@@ -22,7 +22,7 @@ interface SessionData {
   };
 }
 
-export default function AppDashboard() {
+export default function UserDashboard() {
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
 

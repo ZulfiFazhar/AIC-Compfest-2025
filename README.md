@@ -1,36 +1,34 @@
 <div align="center">
     <div>
-        <img height="150px" src="./Assets/logo.png" alt="SiJalu AI Logo"/>
+        <img height="300px" src="./Assets/Raksha-AI.png" alt="Raksha AI Logo"/>
     </div>
     <div>
-            <h3><b>SiJalu AI</b></h3>
-            <p><i>Sistem Jaga Lintas Ruang - AI-Powered Crime Detection for a Safer Bandung</i></p>
+            <h3><b>Raksha AI</b></h3>
+            <p><i>AI-Powered Crime Detection for a Safer Bandung</i></p>
     </div>      
 </div>
 <br>
-<h1 align="center">SiJalu AI - Compfest AI Innovation Challenge</h1>
+<h1 align="center">Raksha AI - Compfest AI Innovation Challenge</h1>
 <div align="center">
 
-<img src="./Assets/Pitch-Deck.png" alt="SiJalu AI Preview"/>
+<img src="./Assets/Pitch-Deck.png" alt="Raksha AI Preview"/>
 
 </div>
 <br>
 
-<b>SiJalu AI</b> is an advanced surveillance system that leverages Artificial Intelligence to detect criminal activities in real-time from CCTV feeds across Bandung. By identifying suspicious behaviors and potential threats, SiJalu AI aims to enhance public safety, accelerate emergency response, and create a more secure urban environment for all citizens.
+<b>Raksha AI</b> is an advanced surveillance system that leverages Artificial Intelligence to detect criminal activities in real-time from CCTV feeds across Bandung. Named after the Sanskrit word meaning "to protect", Raksha AI embodies our mission to safeguard the city of Bandung from suspicious activities using cutting-edge AI technology. By identifying suspicious behaviors and potential threats, Raksha AI aims to enhance public safety, accelerate emergency response, and create a more secure urban environment for all citizens.
 
 <br>
 
 ## Tech Stack
 
 <div align="center">
-<kbd><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" height="60" /></kbd>
-<kbd><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="60" /></kbd>
-<kbd><img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/tailwind_css.png" height="60" /></kbd>
-<kbd><img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/shadcn_ui.png" height="60" /></kbd>
-<kbd><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" height="60" /></kbd>
-<kbd><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="60" /></kbd>
-<kbd><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" height="60" /></kbd>
-<kbd><img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" height="60" /></kbd>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/tailwind_css.png" alt="Tailwind CSS" title="Tailwind CSS"/>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/shadcn_ui.png" alt="ShadCn UI" title="ShadCn UI"/>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/next_js.png" alt="Next.js" title="Next.js"/>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/flask.png" alt="Flask" title="Flask"/>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/mongodb.png" alt="mongoDB" title="mongoDB"/>
+	<img width="80" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/gcp.png" alt="GCP" title="GCP"/>
 </div>
 
 ---
@@ -47,7 +45,7 @@
 
 ## Live Demo
 
-[https://sijalu-ai.vercel.app/](https://sijalu-ai.vercel.app/)
+[https://raksha-ai.vercel.app/](https://raksha-ai.vercel.app/)
 
 ---
 
@@ -64,8 +62,8 @@
 ### Clone the Project
 
 ```bash
-git clone https://github.com/your-repo/sijalu-ai.git
-cd sijalu-ai
+git clone https://github.com/ZulfiFazhar/raksha-ai.git
+cd raksha-ai
 
 # Start the Frontend
 cd Main-App
@@ -123,10 +121,10 @@ FLASK_ENV=development
 ## Architecture
 
 <p align="center">
-  <img src="./Assets/SiJalu-AI-Architecture.png" width="700">
+  <img src="./Assets/Raksha-AI-Architecture.png" width="700">
 </p>
 
-This diagram illustrates the system architecture of the SiJalu AI application.
+This diagram illustrates the system architecture of the Raksha AI application.
 
 ---
 
