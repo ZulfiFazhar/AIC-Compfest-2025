@@ -26,13 +26,13 @@ export function TestimonialsSection() {
   ];
 
   return (
-    <section id="testimonials" className="py-20 bg-muted/50">
+    <section id="testimonials" className="py-20 text-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
             Trusted by Thousands
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted max-w-2xl mx-auto">
             See what our customers say about Raksha.ai
           </p>
         </div>
@@ -41,9 +41,9 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className="border-none shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+              className="border-none shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-foreground/15 text-background"
             >
-              <CardContent className="pt-6">
+              <CardContent>
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
                     <svg
@@ -56,18 +56,16 @@ export function TestimonialsSection() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-muted mb-6">
                   &quot;{testimonial.content}&quot;
                 </p>
                 <div className="flex items-center">
-                  <div className="bg-muted rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                  <div className="bg-muted text-foreground rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <Users className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="font-medium">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
+                    <p className="text-sm text-muted">{testimonial.role}</p>
                   </div>
                 </div>
               </CardContent>
