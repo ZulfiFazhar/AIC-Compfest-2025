@@ -2,18 +2,14 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-// Define a type for the context object
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
-
-export async function PUT(request: Request, context: RouteContext) { // Changed parameter to context
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    const { id } = context.params; // Access params from context
+    const { id } = await params;
     const body = await request.json();
 
     const updatedCamera = {
@@ -45,11 +41,14 @@ export async function PUT(request: Request, context: RouteContext) { // Changed 
   }
 }
 
-export async function DELETE(request: Request, context: RouteContext) { // Changed parameter to context
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    const { id } = context.params; // Access params from context
+    const { id } = await params;
 
     const result = await db
       .collection("cameras")

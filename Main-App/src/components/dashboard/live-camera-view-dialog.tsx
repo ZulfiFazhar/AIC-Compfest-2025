@@ -9,16 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Camera,
-  Play,
-  Pause,
-  RotateCcw,
-  Wifi,
-  Battery,
-  MapPin,
-} from "lucide-react";
-import { useState } from "react";
+import { Camera, Play, RotateCcw, Wifi, Battery, MapPin } from "lucide-react";
 import {
   Camera as CameraType,
   LiveCameraViewDialogProps,

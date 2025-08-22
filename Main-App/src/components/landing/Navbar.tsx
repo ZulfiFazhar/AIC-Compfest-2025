@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Codesandbox } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { AuthButton } from "../auth/auth-button";

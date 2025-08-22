@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { AuthButton } from "@/components/auth/auth-button";
 import { Button } from "@/components/ui/button";
 import { SignoutButton } from "@/components/auth/signout-button";
-import Image from "next/image";
 import Link from "next/link";
 import { UserProfile as SessionData } from "@/types/user";
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -46,11 +46,7 @@ export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
 
-  useEffect(() => {
-    fetchAlerts();
-  }, [searchTerm, filterSeverity, filterStatus]);
-
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     let eventsUrl = "/api/events?";
     if (filterSeverity !== "all") {
       eventsUrl += `severity=${filterSeverity}&`;
@@ -74,7 +70,11 @@ export default function AlertsPage() {
       console.error("Failed to fetch alerts:", error);
       toast.error("Failed to load alerts.");
     }
-  };
+  }, [searchTerm, filterSeverity, filterStatus]);
+
+  useEffect(() => {
+    fetchAlerts();
+  }, [fetchAlerts]);
 
   const handleMarkAsReviewed = async (_id: string) => {
     const res = await fetch(`/api/events/${_id}`, {

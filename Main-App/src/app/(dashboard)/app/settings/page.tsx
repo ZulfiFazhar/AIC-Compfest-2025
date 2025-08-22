@@ -1,14 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -16,12 +33,12 @@ import { toast } from "sonner";
 
 // Define Zod schema for settings form
 const settingsFormSchema = z.object({
-  emailNotifications: z.boolean().default(true),
-  smsNotifications: z.boolean().default(false),
-  defaultAlertSeverity: z.enum(["high", "medium", "low"]).default("medium"),
-  dataRetentionDays: z.string().regex(/^\d+$/, "Must be a number").transform(Number).default("30"),
-  timezone: z.string().default("UTC+7"),
-  twoFactorAuth: z.boolean().default(false),
+  emailNotifications: z.boolean(),
+  smsNotifications: z.boolean(),
+  defaultAlertSeverity: z.enum(["high", "medium", "low"]),
+  dataRetentionDays: z.number().min(1, "Must be at least 1 day"),
+  timezone: z.string(),
+  twoFactorAuth: z.boolean(),
 });
 
 type SettingsFormValues = z.infer<typeof settingsFormSchema>;
@@ -33,7 +50,7 @@ export default function SettingsPage() {
       emailNotifications: true,
       smsNotifications: false,
       defaultAlertSeverity: "medium",
-      dataRetentionDays: "30",
+      dataRetentionDays: 30,
       timezone: "UTC+7",
       twoFactorAuth: false,
     },
@@ -55,7 +72,9 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
-              <CardDescription>Manage general application preferences.</CardDescription>
+              <CardDescription>
+                Manage general application preferences.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -64,7 +83,10 @@ export default function SettingsPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Timezone</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a timezone" />
@@ -107,7 +129,9 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>Configure how you receive alerts.</CardDescription>
+              <CardDescription>
+                Configure how you receive alerts.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -142,7 +166,8 @@ export default function SettingsPage() {
                         SMS Notifications
                       </FormLabel>
                       <FormDescription>
-                        Receive critical alerts via SMS. (Carrier rates may apply)
+                        Receive critical alerts via SMS. (Carrier rates may
+                        apply)
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -160,7 +185,10 @@ export default function SettingsPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Default Alert Severity</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select default severity" />
