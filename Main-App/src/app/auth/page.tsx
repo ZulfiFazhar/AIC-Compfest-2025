@@ -6,25 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SignoutButton } from "@/components/auth/signout-button";
 import Image from "next/image";
 import Link from "next/link";
-
-interface SessionData {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    emailVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
-    image?: string | null;
-  };
-  session: {
-    id: string;
-    userId: string;
-    expiresAt: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
+import { UserProfile as SessionData } from "@/types/user";
 
 export default function Auth() {
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
@@ -40,6 +22,7 @@ export default function Auth() {
 
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           if (data.user) {
             setSessionData(data);
           }

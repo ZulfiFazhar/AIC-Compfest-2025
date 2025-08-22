@@ -1,19 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Menu } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 
 interface DashboardHeaderProps {
   sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
   title: string;
 }
 
-export function DashboardHeader({
-  sidebarOpen,
-  setSidebarOpen,
-  title,
-}: DashboardHeaderProps) {
+export function DashboardHeader({ sidebarOpen, title }: DashboardHeaderProps) {
   return (
     <header
       className={`fixed top-0 right-0 bg-white z-[10] border-b h-16 transition-all duration-300 ease-in-out ${
@@ -22,14 +17,6 @@ export function DashboardHeader({
     >
       <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden mr-2"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="h-6 w-6" />
-          </Button>
           <h1 className="text-2xl font-bold">{title}</h1>
         </div>
         <div className="flex items-center space-x-4">
