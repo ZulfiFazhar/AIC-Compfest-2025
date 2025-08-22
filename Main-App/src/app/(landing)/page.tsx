@@ -5,10 +5,9 @@ import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { WhyChooseUsSection } from "@/components/landing/WhyChooseUsSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
-import { PricingSection } from "@/components/landing/PricingSection";
 import { CallToActionSection } from "@/components/landing/CallToActionSection";
 
-export default function Home() {
+export default function LandingPage() {
   return (
     <>
       <HeroSection />

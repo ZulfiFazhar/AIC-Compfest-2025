@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
     const sessionCookie = request.cookies.get("better-auth.session_token");
 
     if (!sessionCookie?.value) {
-      return NextResponse.redirect(new URL("/auth", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();

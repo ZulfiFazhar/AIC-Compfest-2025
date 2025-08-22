@@ -1,35 +1,79 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Camera, Bell, Clock } from "lucide-react";
 
+interface SystemStatus {
+  _id?: string;
+  systemStatus: string;
+  activeCameras: number;
+  totalCameras: number;
+  alertsToday: number;
+  highPriorityAlerts: number;
+  averageResponseTime: number;
+  lastUpdatedAt: string;
+}
+
 export function StatusCards() {
-  const statusData = [
+  const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSystemStatus = async () => {
+      try {
+        const res = await fetch('/api/system-status');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        setSystemStatus(data);
+      } catch (error) {
+        console.error("Failed to fetch system status:", error);
+        // Optionally set an error state here
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSystemStatus();
+  }, []);
+
+  if (loading) {
+    return <div>Loading status cards...</div>; // Or a skeleton loader
+  }
+
+  if (!systemStatus) {
+    return <div>Failed to load system status.</div>; // Or a message indicating no data
+  }
+
+  // Transform systemStatus into a format suitable for rendering
+  const displayData = [
     {
       title: "System Status",
-      value: "Secure",
-      description: "All systems operational",
+      value: systemStatus.systemStatus,
+      description: "All systems operational", // This description is static, consider making it dynamic
       icon: <Shield className="h-4 w-4 text-muted-foreground" />,
-      color: "text-green-600"
+      color: systemStatus.systemStatus === "Secure" ? "text-green-600" : "text-red-600" // Example dynamic color
     },
     {
       title: "Active Cameras",
-      value: "3/4",
-      description: "1 offline",
+      value: `${systemStatus.activeCameras}/${systemStatus.totalCameras}`,
+      description: `${systemStatus.totalCameras - systemStatus.activeCameras} offline`,
       icon: <Camera className="h-4 w-4 text-muted-foreground" />,
-      badge: <Badge variant="destructive" className="text-xs">1 offline</Badge>
+      badge: systemStatus.totalCameras - systemStatus.activeCameras > 0 ? <Badge variant="destructive" className="text-xs">${systemStatus.totalCameras - systemStatus.activeCameras} offline</Badge> : null
     },
     {
       title: "Today's Alerts",
-      value: "12",
-      description: "2 high priority",
+      value: systemStatus.alertsToday.toString(),
+      description: `${systemStatus.highPriorityAlerts} high priority`,
       icon: <Bell className="h-4 w-4 text-muted-foreground" />,
-      badge: <Badge variant="destructive" className="text-xs">2 high priority</Badge>
+      badge: systemStatus.highPriorityAlerts > 0 ? <Badge variant="destructive" className="text-xs">${systemStatus.highPriorityAlerts} high priority</Badge> : null
     },
     {
       title: "Response Time",
-      value: "1.2s",
+      value: `${systemStatus.averageResponseTime}s`,
       description: "Average detection time",
       icon: <Clock className="h-4 w-4 text-muted-foreground" />
     }
@@ -37,7 +81,7 @@ export function StatusCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {statusData.map((item, index) => (
+      {displayData.map((item, index) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{item.title}</CardTitle>

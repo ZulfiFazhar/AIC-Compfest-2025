@@ -1,34 +1,46 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Play, Pause, RotateCcw, Wifi, Battery, MapPin } from "lucide-react";
+import {
+  Camera,
+  Play,
+  Pause,
+  RotateCcw,
+  Wifi,
+  Battery,
+  MapPin,
+} from "lucide-react";
 import { useState } from "react";
+import {
+  Camera as CameraType,
+  LiveCameraViewDialogProps,
+} from "@/types/camera";
 
-interface CameraDetail {
-  id: string;
-  name: string;
-  location: string;
-  status: "active" | "offline" | "maintenance";
-  ipAddress: string;
-}
-
-interface LiveCameraViewDialogProps {
-  camera: CameraDetail | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export function LiveCameraViewDialog({ camera, isOpen, onClose }: LiveCameraViewDialogProps) {
+export function LiveCameraViewDialog({
+  camera,
+  isOpen,
+  onClose,
+}: LiveCameraViewDialogProps) {
   if (!camera) return null;
 
-  const getStatusBadgeVariant = (status: CameraDetail['status']) => {
+  const getStatusBadgeVariant = (status: CameraType["status"]) => {
     switch (status) {
-      case "active": return "default";
-      case "offline": return "destructive";
-      case "maintenance": return "secondary";
-      default: return "default";
+      case "active":
+        return "default";
+      case "offline":
+        return "destructive";
+      case "maintenance":
+        return "secondary";
+      default:
+        return "default";
     }
   };
 
@@ -82,7 +94,9 @@ export function LiveCameraViewDialog({ camera, isOpen, onClose }: LiveCameraView
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Location</p>
-              <p className="font-medium flex items-center gap-1"><MapPin className="h-4 w-4" /> {camera.location}</p>
+              <p className="font-medium flex items-center gap-1">
+                <MapPin className="h-4 w-4" /> {camera.location}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">IP Address</p>
