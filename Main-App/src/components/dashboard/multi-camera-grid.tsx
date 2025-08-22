@@ -1,15 +1,52 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Camera, Play, Wifi, Battery } from "lucide-react";
-import { Camera as CameraType, MultiCameraGridProps } from "@/types/camera";
 
-export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
+// Updated CameraType interface to match the database schema
+interface CameraType {
+  _id: string;
+  name: string;
+  location: string;
+  ipAddress: string;
+  status: "online" | "offline" | "maintenance"; // Assuming these are the statuses
+  streamUrl: string;
+  addedAt: string; // Assuming it's stored as a string
+}
+
+interface MultiCameraGridProps {
+  onViewLive: (camera: CameraType) => void;
+}
+
+export function MultiCameraGrid({ onViewLive }: MultiCameraGridProps) {
+  const [cameras, setCameras] = useState<CameraType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCameras = async () => {
+      try {
+        const res = await fetch('/api/cameras');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        setCameras(data);
+      } catch (error) {
+        console.error("Failed to fetch cameras:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCameras();
+  }, []);
+
   const getStatusBadgeVariant = (status: CameraType["status"]) => {
     switch (status) {
-      case "active":
+      case "online": // Changed from "active" to "online"
         return "default";
       case "offline":
         return "destructive";
@@ -20,6 +57,14 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
     }
   };
 
+  if (loading) {
+    return <div>Loading cameras...</div>; // Or a skeleton loader
+  }
+
+  if (cameras.length === 0) {
+    return <div>No cameras available.</div>;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -29,11 +74,11 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {cameras.map((camera) => (
             <div
-              key={camera.id}
+              key={camera._id} // Changed from camera.id to camera._id
               className="border rounded-lg overflow-hidden shadow-sm"
             >
               <div className="bg-black aspect-video relative flex items-center justify-center text-white text-sm">
-                {camera.status === "active" ? (
+                {camera.status === "online" ? ( // Changed from "active" to "online"
                   <>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
@@ -81,7 +126,7 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
                   variant="outline"
                   size="sm"
                   className="w-full"
-                  disabled={camera.status !== "active"}
+                  disabled={camera.status !== "online"} // Changed from "active" to "online"
                   onClick={() => onViewLive(camera)}
                 >
                   <Play className="h-3 w-3 mr-1" /> View Live

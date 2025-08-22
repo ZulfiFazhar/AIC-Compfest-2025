@@ -8,42 +8,11 @@ import { ThreatDistribution } from "@/components/dashboard/threat-distribution";
 import { WeeklyActivity } from "@/components/dashboard/weekly-activity";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Camera, cameras } from "@/types/camera";
 import { Alert, alerts as defaultAlerts } from "@/types/alert";
 
 export default function Dashboard() {
-  const dashboardCameras = cameras;
-  const [activeCameraIndex, setActiveCameraIndex] = useState(0);
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>(defaultAlerts);
 
-  const activityData = [
-    { time: "00:00", events: 2 },
-    { time: "04:00", events: 1 },
-    { time: "08:00", events: 8 },
-    { time: "12:00", events: 15 },
-    { time: "16:00", events: 12 },
-    { time: "20:00", events: 22 },
-    { time: "24:00", events: 6 },
-  ];
-
-  const eventData = [
-    { name: "Violence", value: 3 },
-    { name: "Break-in", value: 5 },
-    { name: "Suspicious", value: 12 },
-    { name: "Loitering", value: 8 },
-  ];
-
-  const weeklyData = [
-    { day: "Mon", events: 12 },
-    { day: "Tue", events: 8 },
-    { day: "Wed", events: 15 },
-    { day: "Thu", events: 18 },
-    { day: "Fri", events: 22 },
-    { day: "Sat", events: 9 },
-    { day: "Sun", events: 6 },
-  ];
-
-  // Function to simulate new alerts and trigger toasts
   useEffect(() => {
     const alertTypes = [
       "Violence Detected",
@@ -68,7 +37,7 @@ export default function Dashboard() {
         Math.floor(Math.random() * severities.length)
       ] as "high" | "medium" | "low";
       const newAlert: Alert = {
-        id: Date.now(), // Use number instead of string
+        id: Date.now(),
         type: randomType,
         camera: randomCamera,
         time: "just now",
@@ -81,13 +50,13 @@ export default function Dashboard() {
         confidenceScore: Math.floor(Math.random() * (99 - 70 + 1)) + 70,
       };
 
-      setRecentAlerts((prev) => [newAlert, ...prev].slice(0, 4)); // Keep only latest 4 alerts
+      setRecentAlerts((prev) => [newAlert, ...prev].slice(0, 4));
       toast.error(
         `New Alert: ${newAlert.type} at ${
           newAlert.camera
         } (${newAlert.severity.toUpperCase()})`
       );
-    }, 15000); // Simulate a new alert every 15 seconds
+    }, 15000);
 
     return () => clearInterval(interval);
   }, []);
@@ -98,23 +67,16 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2 space-y-6">
-          <CameraFeed
-            cameras={dashboardCameras}
-            activeCamera={activeCameraIndex}
-            setActiveCamera={setActiveCameraIndex}
-          />
+          <CameraFeed />
           <RecentAlerts alerts={recentAlerts} />
         </div>
 
         <div className="space-y-6">
-          <ActivityChart data={activityData} />
-          <ThreatDistribution data={eventData} />
-          <WeeklyActivity data={weeklyData} />
-          {/* Removed: SystemHealth, UserActivity, SystemPerformance */}
+          <ActivityChart />
+          <ThreatDistribution />
+          <WeeklyActivity />
         </div>
       </div>
-
-      {/* Removed the second grid for UserActivity and SystemPerformance */}
     </>
   );
 }

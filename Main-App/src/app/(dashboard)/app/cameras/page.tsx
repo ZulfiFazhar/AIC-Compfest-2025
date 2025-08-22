@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -12,356 +13,266 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { PlusCircle, Edit, Trash2, Eye, Search } from "lucide-react";
-import { toast } from "sonner";
-import { MultiCameraGrid } from "@/components/dashboard/multi-camera-grid";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LiveCameraViewDialog } from "@/components/dashboard/live-camera-view-dialog";
-import { Camera, cameras as defaultCameras } from "@/types/camera";
 
-// Define Zod schema for camera form
-const cameraFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Camera name must be at least 2 characters." }),
-  location: z
-    .string()
-    .min(2, { message: "Location must be at least 2 characters." }),
-  status: z.enum(["active", "offline", "maintenance"]),
-  ipAddress: z
-    .string()
-    .regex(
-      /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-      { message: "Invalid IP address format." }
-    ),
-});
-
-type CameraFormValues = z.infer<typeof cameraFormSchema>;
+interface Camera {
+  _id: string;
+  name: string;
+  location: string;
+  ipAddress: string;
+  status: string;
+  streamUrl: string;
+}
 
 export default function CamerasPage() {
-  const [cameras, setCameras] = useState<Camera[]>(defaultCameras);
-  const [isAddEditDialogOpen, setIsAddEditDialogOpen] = useState(false);
-  const [editingCamera, setEditingCamera] = useState<Camera | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCameraForLiveView, setSelectedCameraForLiveView] =
-    useState<Camera | null>(null); // New state for live view
-  const [isLiveViewDialogOpen, setIsLiveViewDialogOpen] = useState(false); // New state for live view dialog
-
-  const form = useForm<CameraFormValues>({
-    resolver: zodResolver(cameraFormSchema),
-    defaultValues: {
-      name: "",
-      location: "",
-      status: "active",
-      ipAddress: "",
-    },
-    mode: "onChange", // Added mode: "onChange"
+  const [cameras, setCameras] = useState<Camera[]>([]);
+  const [newCamera, setNewCamera] = useState({
+    name: "",
+    location: "",
+    ipAddress: "",
+    streamUrl: "",
   });
+  const [editingCamera, setEditingCamera] = useState<Camera | null>(null);
 
-  const handleAddCamera = () => {
+  useEffect(() => {
+    fetchCameras();
+  }, []);
+
+  const fetchCameras = async () => {
+    const res = await fetch("/api/cameras");
+    const data = await res.json();
+    setCameras(data);
+  };
+
+  const handleAddCamera = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/cameras", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newCamera),
+    });
+    setNewCamera({ name: "", location: "", ipAddress: "", streamUrl: "" });
+    fetchCameras();
+  };
+
+  const handleUpdateCamera = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCamera) return;
+    await fetch(`/api/cameras/${editingCamera._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editingCamera),
+    });
     setEditingCamera(null);
-    form.reset({ name: "", location: "", status: "active", ipAddress: "" }); // Corrected reset values
-    setIsAddEditDialogOpen(true);
+    fetchCameras();
   };
 
-  const handleEditCamera = (camera: Camera) => {
-    setEditingCamera(camera);
-    form.reset(camera);
-    setIsAddEditDialogOpen(true);
-  };
-
-  const handleDeleteCamera = (id: number) => {
-    setCameras((prev) => prev.filter((cam) => cam.id !== id));
-    toast.success("Camera deleted successfully!");
-  };
-
-  const onSubmit = (values: CameraFormValues) => {
-    if (editingCamera) {
-      // Edit existing camera
-      setCameras((prev) =>
-        prev.map((cam) =>
-          cam.id === editingCamera.id ? { ...cam, ...values } : cam
-        )
-      );
-      toast.success("Camera updated successfully!");
-    } else {
-      // Add new camera
-      const newCamera: Camera = {
-        id: Date.now(), // Use number instead of string
-        ...values,
-      };
-      setCameras((prev) => [...prev, newCamera]);
-      toast.success("Camera added successfully!");
-    }
-    setIsAddEditDialogOpen(false);
-  };
-
-  const handleViewLive = (camera: Camera) => {
-    setSelectedCameraForLiveView(camera);
-    setIsLiveViewDialogOpen(true);
-  };
-
-  const filteredCameras = cameras.filter(
-    (camera) =>
-      camera.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      camera.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      camera.ipAddress.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const getStatusBadgeVariant = (status: Camera["status"]) => {
-    switch (status) {
-      case "active":
-        return "default";
-      case "offline":
-        return "destructive";
-      case "maintenance":
-        return "secondary";
-      default:
-        return "default";
-    }
+  const handleDeleteCamera = async (id: string) => {
+    await fetch(`/api/cameras/${id}`, {
+      method: "DELETE",
+    });
+    fetchCameras();
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Cameras Management</h1>
-        <Button onClick={handleAddCamera}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Camera
-        </Button>
-      </div>
+    <div className="space-y-6 p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Manage Cameras</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={handleAddCamera}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+          >
+            <div>
+              <Label htmlFor="name" className="mb-2">
+                Camera Name
+              </Label>
+              <Input
+                id="name"
+                value={newCamera.name}
+                onChange={(e) =>
+                  setNewCamera({ ...newCamera, name: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="location" className="mb-2">
+                Location
+              </Label>
+              <Input
+                id="location"
+                value={newCamera.location}
+                onChange={(e) =>
+                  setNewCamera({ ...newCamera, location: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="ipAddress" className="mb-2">
+                IP Address
+              </Label>
+              <Input
+                id="ipAddress"
+                value={newCamera.ipAddress}
+                onChange={(e) =>
+                  setNewCamera({ ...newCamera, ipAddress: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="streamUrl" className="mb-2">
+                Stream URL
+              </Label>
+              <Input
+                id="streamUrl"
+                value={newCamera.streamUrl}
+                onChange={(e) =>
+                  setNewCamera({ ...newCamera, streamUrl: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Button type="submit">Add Camera</Button>
+            </div>
+          </form>
 
-      <Tabs defaultValue="live-cameras" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="live-cameras">Live Cameras</TabsTrigger>
-          <TabsTrigger value="camera-details">Camera Details</TabsTrigger>
-        </TabsList>
-        <TabsContent value="live-cameras">
-          <MultiCameraGrid cameras={cameras} onViewLive={handleViewLive} />
-        </TabsContent>
-        <TabsContent value="camera-details">
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle>All Cameras</CardTitle>
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Search cameras..."
-                    className="pl-8 w-[200px] md:w-[300px]"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Location</TableHead>
-                      <TableHead>IP Address</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredCameras.length === 0 ? (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="h-24 text-center text-muted-foreground"
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>IP Address</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {cameras.map((camera) => (
+                <TableRow key={camera._id}>
+                  <TableCell>{camera.name}</TableCell>
+                  <TableCell>{camera.location}</TableCell>
+                  <TableCell>{camera.ipAddress}</TableCell>
+                  <TableCell>{camera.status}</TableCell>
+                  <TableCell>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2"
+                          onClick={() => setEditingCamera(camera)}
                         >
-                          No cameras found.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredCameras.map((camera) => (
-                        <TableRow key={camera.id}>
-                          <TableCell className="font-medium">
-                            {camera.name}
-                          </TableCell>
-                          <TableCell>{camera.location}</TableCell>
-                          <TableCell>{camera.ipAddress}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={getStatusBadgeVariant(camera.status)}
-                            >
-                              {camera.status.charAt(0).toUpperCase() +
-                                camera.status.slice(1)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleViewLive(camera)}
-                              >
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEditCamera(camera)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleDeleteCamera(camera.id)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                          Edit
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Edit Camera</DialogTitle>
+                        </DialogHeader>
+                        {editingCamera && (
+                          <form
+                            onSubmit={handleUpdateCamera}
+                            className="grid gap-4 py-4"
+                          >
+                            <div>
+                              <Label htmlFor="edit-name">Camera Name</Label>
+                              <Input
+                                id="edit-name"
+                                value={editingCamera.name}
+                                onChange={(e) =>
+                                  setEditingCamera({
+                                    ...editingCamera,
+                                    name: e.target.value,
+                                  })
+                                }
+                              />
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Add/Edit Camera Dialog */}
-      <Dialog open={isAddEditDialogOpen} onOpenChange={setIsAddEditDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>
-              {editingCamera ? "Edit Camera" : "Add New Camera"}
-            </DialogTitle>
-            <DialogDescription>
-              {editingCamera
-                ? "Make changes to your camera here."
-                : "Add a new camera to your system."}
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form} key={editingCamera?.id || "new-camera-form"}>
-            {" "}
-            {/* Added key prop */}
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="grid gap-4 py-4"
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Camera Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., Main Entrance Camera"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., Building A, Floor 1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="ipAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>IP Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 192.168.1.100" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                            <div>
+                              <Label htmlFor="edit-location">Location</Label>
+                              <Input
+                                id="edit-location"
+                                value={editingCamera.location}
+                                onChange={(e) =>
+                                  setEditingCamera({
+                                    ...editingCamera,
+                                    location: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="edit-ipAddress">IP Address</Label>
+                              <Input
+                                id="edit-ipAddress"
+                                value={editingCamera.ipAddress}
+                                onChange={(e) =>
+                                  setEditingCamera({
+                                    ...editingCamera,
+                                    ipAddress: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="edit-streamUrl">Stream URL</Label>
+                              <Input
+                                id="edit-streamUrl"
+                                value={editingCamera.streamUrl}
+                                onChange={(e) =>
+                                  setEditingCamera({
+                                    ...editingCamera,
+                                    streamUrl: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="edit-status">Status</Label>
+                              <Input
+                                id="edit-status"
+                                value={editingCamera.status}
+                                onChange={(e) =>
+                                  setEditingCamera({
+                                    ...editingCamera,
+                                    status: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <DialogFooter>
+                              <Button type="submit">Save changes</Button>
+                            </DialogFooter>
+                          </form>
+                        )}
+                      </DialogContent>
+                    </Dialog>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteCamera(camera._id)}
                     >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="offline">Offline</SelectItem>
-                        <SelectItem value="maintenance">Maintenance</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <Button type="submit">
-                  {editingCamera ? "Save Changes" : "Add Camera"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Live Camera View Dialog */}
-      <LiveCameraViewDialog
-        camera={selectedCameraForLiveView}
-        isOpen={isLiveViewDialogOpen}
-        onClose={() => setIsLiveViewDialogOpen(false)}
-      />
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }

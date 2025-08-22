@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,59 +21,97 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Search,
-  AlertTriangle,
-  CheckCircle,
-  Trash2,
-  Filter,
-  Eye,
-} from "lucide-react";
+import { Search, CheckCircle, Trash2, Filter, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { AlertDetailDialog } from "@/components/dashboard/alert-detail-dialog";
-import { Alert, alerts as defaultAlerts } from "@/types/alert";
+
+interface Alert {
+  _id: string;
+  timestamp: string;
+  type: string;
+  severity: "high" | "medium" | "low" | "info";
+  cameraId?: string;
+  cameraName?: string; // Added cameraName
+  cameraLocation?: string; // Added cameraLocation
+  userId?: string;
+  details?: any;
+  status?: "new" | "reviewed"; // Assuming alerts can have a status
+}
 
 export default function AlertsPage() {
-  const [alerts, setAlerts] = useState<Alert[]>(defaultAlerts);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSeverity, setFilterSeverity] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
 
-  const handleMarkAsReviewed = (id: string) => {
-    const numericId = parseInt(id);
-    setAlerts((prev) =>
-      prev.map((alert) =>
-        alert.id === numericId ? { ...alert, status: "reviewed" } : alert
-      )
-    );
-    toast.success("Alert marked as reviewed!");
+  useEffect(() => {
+    fetchAlerts();
+  }, [searchTerm, filterSeverity, filterStatus]);
+
+  const fetchAlerts = async () => {
+    let eventsUrl = "/api/events?";
+    if (filterSeverity !== "all") {
+      eventsUrl += `severity=${filterSeverity}&`;
+    }
+    if (filterStatus !== "all") {
+      eventsUrl += `status=${filterStatus}&`;
+    }
+    if (searchTerm) {
+      eventsUrl += `searchTerm=${encodeURIComponent(searchTerm)}&`;
+    }
+
+    try {
+      const res = await fetch(eventsUrl);
+      if (!res.ok)
+        throw new Error(`HTTP error! status: ${res.status} for events`);
+
+      const eventsData: Alert[] = await res.json();
+
+      setAlerts(eventsData);
+    } catch (error) {
+      console.error("Failed to fetch alerts:", error);
+      toast.error("Failed to load alerts.");
+    }
   };
 
-  const handleDeleteAlert = (id: number) => {
-    setAlerts((prev) => prev.filter((alert) => alert.id !== id));
-    toast.success("Alert deleted successfully!");
+  const handleMarkAsReviewed = async (_id: string) => {
+    const res = await fetch(`/api/events/${_id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "reviewed" }),
+    });
+
+    if (res.ok) {
+      setAlerts((prev) =>
+        prev.map((alert) =>
+          alert._id === _id ? { ...alert, status: "reviewed" } : alert
+        )
+      );
+      toast.success("Alert marked as reviewed!");
+    } else {
+      toast.error("Failed to mark alert as reviewed.");
+    }
+  };
+
+  const handleDeleteAlert = async (_id: string) => {
+    const res = await fetch(`/api/events/${_id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      setAlerts((prev) => prev.filter((alert) => alert._id !== _id));
+      toast.success("Alert deleted successfully!");
+    } else {
+      toast.error("Failed to delete alert.");
+    }
   };
 
   const handleViewDetails = (alert: Alert) => {
     setSelectedAlert(alert);
     setIsDetailDialogOpen(true);
   };
-
-  const filteredAlerts = alerts.filter((alert) => {
-    const matchesSearch =
-      alert.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      alert.camera.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      alert.time.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesSeverity =
-      filterSeverity === "all" || alert.severity === filterSeverity;
-    const matchesStatus =
-      filterStatus === "all" || alert.status === filterStatus;
-
-    return matchesSearch && matchesSeverity && matchesStatus;
-  });
 
   const getSeverityBadgeVariant = (severity: Alert["severity"]) => {
     switch (severity) {
@@ -145,6 +184,7 @@ export default function AlertsPage() {
                 <TableRow>
                   <TableHead>Type</TableHead>
                   <TableHead>Camera</TableHead>
+                  <TableHead>Location</TableHead>
                   <TableHead>Time</TableHead>
                   <TableHead>Severity</TableHead>
                   <TableHead>Status</TableHead>
@@ -152,23 +192,26 @@ export default function AlertsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAlerts.length === 0 ? (
+                {alerts.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={7}
                       className="h-24 text-center text-muted-foreground"
                     >
                       No alerts found matching your criteria.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAlerts.map((alert) => (
-                    <TableRow key={alert.id}>
+                  alerts.map((alert) => (
+                    <TableRow key={alert._id}>
                       <TableCell className="font-medium">
                         {alert.type}
                       </TableCell>
-                      <TableCell>{alert.camera}</TableCell>
-                      <TableCell>{alert.time}</TableCell>
+                      <TableCell>{alert.cameraName}</TableCell>
+                      <TableCell>{alert.cameraLocation}</TableCell>
+                      <TableCell>
+                        {new Date(alert.timestamp).toLocaleString()}
+                      </TableCell>
                       <TableCell>
                         <Badge
                           variant={getSeverityBadgeVariant(alert.severity)}
@@ -178,9 +221,11 @@ export default function AlertsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getStatusBadgeVariant(alert.status)}>
-                          {alert.status.charAt(0).toUpperCase() +
-                            alert.status.slice(1)}
+                        <Badge
+                          variant={getStatusBadgeVariant(alert.status || "new")}
+                        >
+                          {(alert.status || "new").charAt(0).toUpperCase() +
+                            (alert.status || "new").slice(1)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -196,9 +241,7 @@ export default function AlertsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() =>
-                                handleMarkAsReviewed(alert.id.toString())
-                              }
+                              onClick={() => handleMarkAsReviewed(alert._id)}
                             >
                               <CheckCircle className="h-4 w-4" />
                             </Button>
@@ -206,7 +249,7 @@ export default function AlertsPage() {
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => handleDeleteAlert(alert.id)}
+                            onClick={() => handleDeleteAlert(alert._id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
