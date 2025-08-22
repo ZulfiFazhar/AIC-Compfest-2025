@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="px-5 pb-10 bg-transparent border-muted">
       <Separator className="mb-5" />
       <div className="flex flex-col items-center justify-center text-muted text-sm space-y-4">
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center space-x-4">
           <a href="https://www.youtube.com/">
             <Youtube className="h-8 w-8" />
           </a>

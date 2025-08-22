@@ -14,6 +14,7 @@ import {
   Shield,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 interface SidebarProps {
@@ -43,11 +44,17 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         {sidebarOpen ? (
           <>
             <div className="flex items-center space-x-2">
-              <div className="bg-primary w-8 h-8 rounded-lg flex items-center justify-center">
+              {/* <div className="bg-primary w-8 h-8 rounded-lg flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary-foreground" />
-              </div>
+              </div> */}
               <Link href="/" className="text-xl font-bold">
-                Raksha<span className="text-primary">.ai</span>
+                <Image
+                  src="RAKSHA1.svg"
+                  alt="Raksha AI Logo"
+                  width={120}
+                  height={120}
+                />
+                {/* Raksha<span className="text-primary">.ai</span> */}
               </Link>
             </div>
             <Button
