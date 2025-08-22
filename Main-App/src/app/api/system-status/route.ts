@@ -27,7 +27,7 @@ export async function PUT(request: Request) {
       lastUpdatedAt: new Date(),
     };
 
-    const result = await db
+    await db
       .collection("system_status")
       .updateOne({ $set: updatedStatus }, { upsert: true });
 

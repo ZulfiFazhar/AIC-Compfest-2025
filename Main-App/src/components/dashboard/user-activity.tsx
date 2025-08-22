@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface UserActivityItem {
   user: string; // This will be the user's name
@@ -34,31 +40,38 @@ export function UserActivity() {
     const fetchUserActivities = async () => {
       try {
         // Fetch all events
-        const eventsRes = await fetch('/api/events');
+        const eventsRes = await fetch("/api/events");
         if (!eventsRes.ok) {
           throw new Error(`HTTP error! status: ${eventsRes.status}`);
         }
         const events: Event[] = await eventsRes.json();
 
         // Fetch all users to map user IDs to names
-        const usersRes = await fetch('/api/users');
+        const usersRes = await fetch("/api/users");
         let users: UserData[] = [];
         if (usersRes.ok) {
           users = await usersRes.json();
         } else {
-          console.warn("Could not fetch users. User names might not be displayed correctly.");
+          console.warn(
+            "Could not fetch users. User names might not be displayed correctly."
+          );
           // Fallback for dummy user data if /api/users doesn't exist
-          users = [{ _id: "68a7eb4bf6d83a2cfa472ccc", name: "John Doe", email: "john@email.com" }];
+          users = [
+            {
+              _id: "68a7eb4bf6d83a2cfa472ccc",
+              name: "John Doe",
+              email: "john@email.com",
+            },
+          ];
         }
 
-
         const userMap = new Map<string, string>();
-        users.forEach(user => userMap.set(user._id, user.name));
+        users.forEach((user) => userMap.set(user._id, user.name));
 
         // Filter for events with a userId and map to UserActivityItem
         const userActivities: UserActivityItem[] = events
-          .filter(event => event.userId)
-          .map(event => ({
+          .filter((event) => event.userId)
+          .map((event) => ({
             user: userMap.get(event.userId!) || `User ${event.userId}`, // Use name if found, else show ID
             action: event.type,
             time: new Date(event.timestamp).toLocaleString(), // Format timestamp
