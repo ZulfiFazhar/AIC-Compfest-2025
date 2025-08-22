@@ -1,7 +1,5 @@
 "use client";
 
-import { Shield } from "lucide-react";
-
 export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="py-20">

@@ -1,11 +1,11 @@
 "use client";
 
-import { HeroSection } from "@/components/landing/HeroSection";
-import { FeaturesSection } from "@/components/landing/FeaturesSection";
-import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
-import { WhyChooseUsSection } from "@/components/landing/WhyChooseUsSection";
-import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
-import { CallToActionSection } from "@/components/landing/CallToActionSection";
+import { HeroSection } from "@/components/landing/hero-section";
+import { FeaturesSection } from "@/components/landing/features-section";
+import { HowItWorksSection } from "@/components/landing/hiw-section";
+import { WhyChooseUsSection } from "@/components/landing/wcu-section";
+import { TestimonialsSection } from "@/components/landing/testimonials-section";
+import { CallToActionSection } from "@/components/landing/cta-section";
 
 export default function LandingPage() {
   return (
