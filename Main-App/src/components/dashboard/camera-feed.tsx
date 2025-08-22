@@ -11,19 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Camera, Play, Pause, RotateCcw, Wifi, Battery } from "lucide-react";
 import { useState } from "react";
-
-interface Camera {
-  id: number;
-  name: string;
-  status: "active" | "offline";
-  location: string;
-}
-
-interface CameraFeedProps {
-  cameras: Camera[];
-  activeCamera: number;
-  setActiveCamera: (index: number) => void;
-}
+import { Camera as CameraType, CameraFeedProps } from "@/types/camera";
 
 export function CameraFeed({
   cameras,
@@ -91,7 +79,7 @@ export function CameraFeed({
               <Camera className="h-5 w-5 mb-1" />
               <span className="text-xs">{camera.name}</span>
               <Badge
-                variant={camera.status === "active" ? "active" : "destructive"}
+                variant={camera.status === "active" ? "default" : "destructive"}
                 className="mt-1 capitalize"
               >
                 {camera.status}

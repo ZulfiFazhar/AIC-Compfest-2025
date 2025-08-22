@@ -29,100 +29,11 @@ import {
   Eye,
 } from "lucide-react";
 import { toast } from "sonner";
-import { AlertDetailDialog } from "@/components/dashboard/alert-detail-dialog"; // Import the new component
-
-// Define Alert interface
-interface Alert {
-  id: string;
-  type: string;
-  camera: string;
-  time: string;
-  severity: "high" | "medium" | "low";
-  status: "new" | "reviewed";
-  location: string; // Added for detail dialog
-  description: string; // Added for detail dialog
-  mediaType: "video" | "image"; // Added for detail dialog
-  mediaUrl: string; // Added for detail dialog
-}
+import { AlertDetailDialog } from "@/components/dashboard/alert-detail-dialog";
+import { Alert, alerts as defaultAlerts } from "@/types/alert";
 
 export default function AlertsPage() {
-  const [alerts, setAlerts] = useState<Alert[]>([
-    {
-      id: "alert-001",
-      type: "Violence Detected",
-      camera: "Main Entrance",
-      time: "2023-10-26 10:30 AM",
-      severity: "high",
-      status: "new",
-      location: "Front Building",
-      description:
-        "System detected physical violence in the main entrance area.",
-      mediaType: "video",
-      mediaUrl: "/mock-video-violence.mp4",
-    },
-    {
-      id: "alert-002",
-      type: "Suspicious Activity",
-      camera: "Parking Lot",
-      time: "2023-10-26 09:45 AM",
-      severity: "medium",
-      status: "new",
-      location: "East Wing Parking",
-      description:
-        "Someone was seen peeking into several cars in the parking area.",
-      mediaType: "image",
-      mediaUrl: "/mock-image-suspicious.jpg",
-    },
-    {
-      id: "alert-003",
-      type: "Loitering",
-      camera: "Lobby",
-      time: "2023-10-25 05:00 PM",
-      severity: "low",
-      status: "reviewed",
-      location: "Main Lobby",
-      description:
-        "Several individuals loitering in the lobby after operating hours.",
-      mediaType: "video",
-      mediaUrl: "/mock-video-loitering.mp4",
-    },
-    {
-      id: "alert-004",
-      type: "Break-in Attempt",
-      camera: "Back Door",
-      time: "2023-10-25 02:15 AM",
-      severity: "high",
-      status: "new",
-      location: "Rear Entrance",
-      description: "Forced attempt to open the back door detected.",
-      mediaType: "image",
-      mediaUrl: "/mock-image-breakin.jpg",
-    },
-    {
-      id: "alert-005",
-      type: "Unauthorized Access",
-      camera: "Server Room",
-      time: "2023-10-24 11:00 PM",
-      severity: "high",
-      status: "reviewed",
-      location: "Server Room",
-      description: "An unauthorized person attempted to enter the server room.",
-      mediaType: "video",
-      mediaUrl: "/mock-video-unauthorized.mp4",
-    },
-    {
-      id: "alert-006",
-      type: "Package Left Unattended",
-      camera: "Front Desk",
-      time: "2023-10-24 03:30 PM",
-      severity: "low",
-      status: "new",
-      location: "Front Desk Area",
-      description: "A package was left unattended near the front desk.",
-      mediaType: "image",
-      mediaUrl: "/mock-image-package.jpg",
-    },
-  ]);
+  const [alerts, setAlerts] = useState<Alert[]>(defaultAlerts);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSeverity, setFilterSeverity] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -130,15 +41,16 @@ export default function AlertsPage() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
 
   const handleMarkAsReviewed = (id: string) => {
+    const numericId = parseInt(id);
     setAlerts((prev) =>
       prev.map((alert) =>
-        alert.id === id ? { ...alert, status: "reviewed" } : alert
+        alert.id === numericId ? { ...alert, status: "reviewed" } : alert
       )
     );
     toast.success("Alert marked as reviewed!");
   };
 
-  const handleDeleteAlert = (id: string) => {
+  const handleDeleteAlert = (id: number) => {
     setAlerts((prev) => prev.filter((alert) => alert.id !== id));
     toast.success("Alert deleted successfully!");
   };
@@ -284,7 +196,9 @@ export default function AlertsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleMarkAsReviewed(alert.id)}
+                              onClick={() =>
+                                handleMarkAsReviewed(alert.id.toString())
+                              }
                             >
                               <CheckCircle className="h-4 w-4" />
                             </Button>

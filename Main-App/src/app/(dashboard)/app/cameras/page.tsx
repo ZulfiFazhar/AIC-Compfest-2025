@@ -43,16 +43,8 @@ import { PlusCircle, Edit, Trash2, Eye, Search } from "lucide-react";
 import { toast } from "sonner";
 import { MultiCameraGrid } from "@/components/dashboard/multi-camera-grid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LiveCameraViewDialog } from "@/components/dashboard/live-camera-view-dialog"; // Import the new component
-
-// Define Camera interface
-interface Camera {
-  id: string;
-  name: string;
-  location: string;
-  status: "active" | "offline" | "maintenance";
-  ipAddress: string;
-}
+import { LiveCameraViewDialog } from "@/components/dashboard/live-camera-view-dialog";
+import { Camera, cameras as defaultCameras } from "@/types/camera";
 
 // Define Zod schema for camera form
 const cameraFormSchema = z.object({
@@ -74,36 +66,7 @@ const cameraFormSchema = z.object({
 type CameraFormValues = z.infer<typeof cameraFormSchema>;
 
 export default function CamerasPage() {
-  const [cameras, setCameras] = useState<Camera[]>([
-    {
-      id: "cam-001",
-      name: "Main Entrance",
-      location: "Front Building",
-      status: "active",
-      ipAddress: "192.168.1.101",
-    },
-    {
-      id: "cam-002",
-      name: "Parking Lot",
-      location: "East Wing",
-      status: "active",
-      ipAddress: "192.168.1.102",
-    },
-    {
-      id: "cam-003",
-      name: "Back Door",
-      location: "Rear Entrance",
-      status: "offline",
-      ipAddress: "192.168.1.103",
-    },
-    {
-      id: "cam-004",
-      name: "Lobby",
-      location: "Ground Floor",
-      status: "maintenance",
-      ipAddress: "192.168.1.104",
-    },
-  ]);
+  const [cameras, setCameras] = useState<Camera[]>(defaultCameras);
   const [isAddEditDialogOpen, setIsAddEditDialogOpen] = useState(false);
   const [editingCamera, setEditingCamera] = useState<Camera | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -134,7 +97,7 @@ export default function CamerasPage() {
     setIsAddEditDialogOpen(true);
   };
 
-  const handleDeleteCamera = (id: string) => {
+  const handleDeleteCamera = (id: number) => {
     setCameras((prev) => prev.filter((cam) => cam.id !== id));
     toast.success("Camera deleted successfully!");
   };
@@ -151,7 +114,7 @@ export default function CamerasPage() {
     } else {
       // Add new camera
       const newCamera: Camera = {
-        id: `cam-${Date.now()}`, // Simple unique ID
+        id: Date.now(), // Use number instead of string
         ...values,
       };
       setCameras((prev) => [...prev, newCamera]);
@@ -175,13 +138,13 @@ export default function CamerasPage() {
   const getStatusBadgeVariant = (status: Camera["status"]) => {
     switch (status) {
       case "active":
-        return "active";
+        return "default";
       case "offline":
         return "destructive";
       case "maintenance":
         return "secondary";
       default:
-        return "active";
+        return "default";
     }
   };
 

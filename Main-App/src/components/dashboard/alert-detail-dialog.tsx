@@ -1,49 +1,55 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Camera, Clock, MapPin, Video, Image, Siren } from "lucide-react"; // Import Siren icon
-import { toast } from "sonner"; // Import toast for notifications
+import {
+  AlertTriangle,
+  Camera,
+  Clock,
+  MapPin,
+  Video,
+  Image,
+  Siren,
+} from "lucide-react";
+import { toast } from "sonner";
+import { Alert, AlertDetailDialogProps } from "@/types/alert";
 
-interface AlertDetail {
-  id: string;
-  type: string;
-  camera: string;
-  time: string;
-  severity: "high" | "medium" | "low";
-  status: "new" | "reviewed";
-  location: string;
-  description: string;
-  mediaType: "video" | "image";
-  mediaUrl: string;
-  confidenceScore?: number; // Added confidence score
-}
-
-interface AlertDetailDialogProps {
-  alert: AlertDetail | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onMarkAsReviewed: (id: string) => void;
-}
-
-export function AlertDetailDialog({ alert, isOpen, onClose, onMarkAsReviewed }: AlertDetailDialogProps) {
+export function AlertDetailDialog({
+  alert,
+  isOpen,
+  onClose,
+  onMarkAsReviewed,
+}: AlertDetailDialogProps) {
   if (!alert) return null;
 
-  const getSeverityBadgeVariant = (severity: AlertDetail['severity']) => {
+  const getSeverityBadgeVariant = (severity: Alert["severity"]) => {
     switch (severity) {
-      case "high": return "destructive";
-      case "medium": return "default";
-      case "low": return "secondary";
-      default: return "secondary";
+      case "high":
+        return "destructive";
+      case "medium":
+        return "default";
+      case "low":
+        return "secondary";
+      default:
+        return "secondary";
     }
   };
 
-  const getSeverityIconColor = (severity: AlertDetail['severity']) => {
+  const getSeverityIconColor = (severity: Alert["severity"]) => {
     switch (severity) {
-      case "high": return "text-red-600";
-      case "medium": return "text-yellow-600";
-      default: return "text-blue-600";
+      case "high":
+        return "text-red-600";
+      case "medium":
+        return "text-yellow-600";
+      default:
+        return "text-blue-600";
     }
   };
 
@@ -57,7 +63,9 @@ export function AlertDetailDialog({ alert, isOpen, onClose, onMarkAsReviewed }: 
       <DialogContent className="sm:max-w-[600px] p-0">
         <DialogHeader className="p-6 pb-4">
           <DialogTitle className="flex items-center gap-2">
-            <AlertTriangle className={`h-6 w-6 ${getSeverityIconColor(alert.severity)}`} />
+            <AlertTriangle
+              className={`h-6 w-6 ${getSeverityIconColor(alert.severity)}`}
+            />
             {alert.type}
           </DialogTitle>
           <DialogDescription>
@@ -72,27 +80,36 @@ export function AlertDetailDialog({ alert, isOpen, onClose, onMarkAsReviewed }: 
             <Image className="h-12 w-12 text-gray-400" />
           )}
           <span className="ml-2">Incident Preview (Mock)</span>
-          <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">LIVE</div>
+          <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            LIVE
+          </div>
         </div>
 
         <div className="p-6 pt-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Camera</p>
-              <p className="font-medium flex items-center gap-1"><Camera className="h-4 w-4" /> {alert.camera}</p>
+              <p className="font-medium flex items-center gap-1">
+                <Camera className="h-4 w-4" /> {alert.camera}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Time</p>
-              <p className="font-medium flex items-center gap-1"><Clock className="h-4 w-4" /> {alert.time}</p>
+              <p className="font-medium flex items-center gap-1">
+                <Clock className="h-4 w-4" /> {alert.time}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Location</p>
-              <p className="font-medium flex items-center gap-1"><MapPin className="h-4 w-4" /> {alert.location}</p>
+              <p className="font-medium flex items-center gap-1">
+                <MapPin className="h-4 w-4" /> {alert.location}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Severity Level</p>
               <Badge variant={getSeverityBadgeVariant(alert.severity)}>
-                {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
+                {alert.severity.charAt(0).toUpperCase() +
+                  alert.severity.slice(1)}
               </Badge>
             </div>
             {alert.confidenceScore !== undefined && (
@@ -104,7 +121,9 @@ export function AlertDetailDialog({ alert, isOpen, onClose, onMarkAsReviewed }: 
           </div>
 
           <div>
-            <p className="text-sm text-muted-foreground">Incident Description</p>
+            <p className="text-sm text-muted-foreground">
+              Incident Description
+            </p>
             <p className="font-medium">{alert.description}</p>
           </div>
 
@@ -113,7 +132,12 @@ export function AlertDetailDialog({ alert, isOpen, onClose, onMarkAsReviewed }: 
               <Siren className="h-4 w-4 mr-2" /> Notify Police
             </Button>
             {alert.status === "new" && (
-              <Button onClick={() => { onMarkAsReviewed(alert.id); onClose(); }}>
+              <Button
+                onClick={() => {
+                  onMarkAsReviewed(alert.id.toString()); // Convert number to string for the function
+                  onClose();
+                }}
+              >
                 Mark as Reviewed
               </Button>
             )}

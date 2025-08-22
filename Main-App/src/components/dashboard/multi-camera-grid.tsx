@@ -4,27 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Camera, Play, Wifi, Battery } from "lucide-react";
-
-interface Camera {
-  id: string;
-  name: string;
-  location: string;
-  status: "active" | "offline" | "maintenance";
-  ipAddress: string;
-}
-
-interface MultiCameraGridProps {
-  cameras: Camera[];
-  onViewLive: (camera: Camera) => void; // Callback to view a single camera in detail
-}
+import { Camera as CameraType, MultiCameraGridProps } from "@/types/camera";
 
 export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
-  const getStatusBadgeVariant = (status: Camera['status']) => {
+  const getStatusBadgeVariant = (status: CameraType["status"]) => {
     switch (status) {
-      case "active": return "default";
-      case "offline": return "destructive";
-      case "maintenance": return "secondary";
-      default: return "default";
+      case "active":
+        return "default";
+      case "offline":
+        return "destructive";
+      case "maintenance":
+        return "secondary";
+      default:
+        return "default";
     }
   };
 
@@ -36,7 +28,10 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {cameras.map((camera) => (
-            <div key={camera.id} className="border rounded-lg overflow-hidden shadow-sm">
+            <div
+              key={camera.id}
+              className="border rounded-lg overflow-hidden shadow-sm"
+            >
               <div className="bg-black aspect-video relative flex items-center justify-center text-white text-sm">
                 {camera.status === "active" ? (
                   <>
@@ -64,7 +59,10 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
                   <div className="text-center text-gray-400">
                     <Camera className="h-8 w-8 mx-auto mb-2" />
                     <p>{camera.name}</p>
-                    <p className="text-xs">{camera.status.charAt(0).toUpperCase() + camera.status.slice(1)}</p>
+                    <p className="text-xs">
+                      {camera.status.charAt(0).toUpperCase() +
+                        camera.status.slice(1)}
+                    </p>
                   </div>
                 )}
               </div>
@@ -72,14 +70,17 @@ export function MultiCameraGrid({ cameras, onViewLive }: MultiCameraGridProps) {
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-medium text-sm">{camera.name}</h3>
                   <Badge variant={getStatusBadgeVariant(camera.status)}>
-                    {camera.status.charAt(0).toUpperCase() + camera.status.slice(1)}
+                    {camera.status.charAt(0).toUpperCase() +
+                      camera.status.slice(1)}
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">{camera.location}</p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full" 
+                <p className="text-xs text-muted-foreground mb-3">
+                  {camera.location}
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
                   disabled={camera.status !== "active"}
                   onClick={() => onViewLive(camera)}
                 >

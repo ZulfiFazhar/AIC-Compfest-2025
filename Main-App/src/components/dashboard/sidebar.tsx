@@ -1,21 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { UserProfile } from "@/components/dashboard/user-profile";
 import {
   Activity,
   Camera,
   Bell,
   TrendingUp,
-  Users,
   Settings,
   PanelLeftOpen,
   PanelRightOpen,
-  User,
-  Shield,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { UserProfile as SessionData } from "@/types/user";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -23,20 +23,42 @@ interface SidebarProps {
 }
 
 export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
-  const pathname = usePathname(); // Get the current path
-
+  const pathname = usePathname();
   const navItems = [
     { href: "/app", icon: Activity, label: "Dashboard" },
     { href: "/app/cameras", icon: Camera, label: "Cameras" },
     { href: "/app/alerts", icon: Bell, label: "Alerts" },
     { href: "/app/analytics", icon: TrendingUp, label: "Analytics" },
-    { href: "/app/users", icon: Users, label: "Users" },
     { href: "/app/settings", icon: Settings, label: "Settings" },
   ];
 
+  const [sessionData, setSessionData] = useState<SessionData | null>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/session", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.user) {
+            setSessionData(data);
+          }
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 bg-background border-r transition-all duration-300 ease-in-out ${
+      className={`hidden sm:block fixed inset-y-0 left-0 z-50 bg-background border-r transition-all duration-300 ease-in-out ${
         sidebarOpen ? "w-64" : "w-20"
       }`}
     >
@@ -44,9 +66,6 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         {sidebarOpen ? (
           <>
             <div className="flex items-center space-x-2">
-              {/* <div className="bg-primary w-8 h-8 rounded-lg flex items-center justify-center">
-                <Shield className="h-5 w-5 text-primary-foreground" />
-              </div> */}
               <Link href="/" className="text-xl font-bold">
                 <Image
                   src="RAKSHA1.svg"
@@ -54,14 +73,13 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                   width={120}
                   height={120}
                 />
-                {/* Raksha<span className="text-primary">.ai</span> */}
               </Link>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="hidden md:flex"
+              className="flex"
             >
               <PanelRightOpen className="h-8 w-8" />
             </Button>
@@ -71,7 +89,7 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="hidden md:flex mx-auto"
+            className="flex mx-auto"
           >
             <PanelLeftOpen className="h-8 w-8" />
           </Button>
@@ -99,17 +117,9 @@ export function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       </nav>
 
       {/* User Profile Section */}
-      {sidebarOpen && (
+      {sidebarOpen && sessionData && (
         <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center space-x-3 px-3 py-2 rounded-lg bg-muted">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-              <User className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">John Doe</p>
-              <p className="text-xs text-muted-foreground">Admin</p>
-            </div>
-          </div>
+          <UserProfile />
         </div>
       )}
     </aside>
