@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Search, Filter, Menu } from "lucide-react";
-import { useState } from "react";
 
 interface DashboardHeaderProps {
   sidebarOpen: boolean;
@@ -10,17 +9,23 @@ interface DashboardHeaderProps {
   title: string;
 }
 
-export function DashboardHeader({ sidebarOpen, setSidebarOpen, title }: DashboardHeaderProps) {
+export function DashboardHeader({
+  sidebarOpen,
+  setSidebarOpen,
+  title,
+}: DashboardHeaderProps) {
   return (
-    <header className={`fixed top-0 right-0 bg-white z-[10] border-b h-16 transition-all duration-300 ease-in-out ${
-      sidebarOpen ? 'md:left-64' : 'md:left-20'
-    } left-0`}>
+    <header
+      className={`fixed top-0 right-0 bg-white z-[10] border-b h-16 transition-all duration-300 ease-in-out ${
+        sidebarOpen ? "md:left-64" : "md:left-20"
+      } left-0`}
+    >
       <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden mr-2" 
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden mr-2"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-6 w-6" />

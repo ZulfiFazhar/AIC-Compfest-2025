@@ -133,7 +133,7 @@
 .loader {
   width: 40px;
   aspect-ratio: 1;
-  color: #f03355;
+  color: #ffffff;
   position: relative;
   background: radial-gradient(10px, currentColor 94%, #0000);
 }
@@ -167,6 +167,45 @@
 }
 
 .gradient {
+  background-color: rgb(183, 237, 199);
+  background-image: radial-gradient(
+      at 31% 1%,
+      rgb(12, 74, 110) 0,
+      transparent 67%
+    ),
+    radial-gradient(at 59% 14%, rgb(75, 85, 99) 0, transparent 89%),
+    radial-gradient(at 66% 70%, rgb(34, 211, 238) 0, transparent 82%),
+    radial-gradient(at 49% 19%, rgb(87, 83, 78) 0, transparent 24%),
+    radial-gradient(at 53% 34%, rgb(217, 249, 157) 0, transparent 88%),
+    radial-gradient(at 28% 82%, rgb(254, 240, 138) 0, transparent 82%);
+}
+/* .gradient {
+  background-color: rgb(204, 251, 241);
+  background-image: radial-gradient(
+      at 85% 48%,
+      rgb(6, 78, 59) 0,
+      transparent 84%
+    ),
+    radial-gradient(at 34% 7%, rgb(112, 26, 117) 0, transparent 86%),
+    radial-gradient(at 94% 3%, rgb(255, 247, 237) 0, transparent 40%),
+    radial-gradient(at 93% 29%, rgb(245, 245, 244) 0, transparent 88%),
+    radial-gradient(at 41% 71%, rgb(109, 40, 217) 0, transparent 78%),
+    radial-gradient(at 74% 40%, rgb(147, 197, 253) 0, transparent 37%);
+} */
+/* .gradient {
+  background-color: rgb(15, 23, 42);
+  background-image: radial-gradient(
+      at 92% 90%,
+      rgb(64, 64, 64) 0,
+      transparent 75%
+    ),
+    radial-gradient(at 70% 26%, rgb(55, 48, 163) 0, transparent 60%),
+    radial-gradient(at 6% 65%, rgb(187, 247, 208) 0, transparent 22%),
+    radial-gradient(at 16% 98%, rgb(253, 244, 255) 0, transparent 54%),
+    radial-gradient(at 1% 84%, rgb(79, 70, 229) 0, transparent 84%),
+    radial-gradient(at 84% 11%, rgb(6, 78, 59) 0, transparent 1%);
+} */
+/* .gradient {
   background-color: rgb(54, 182, 214);
   background-image: radial-gradient(
       at 68% 21%,
@@ -178,4 +217,4 @@
     radial-gradient(at 98% 77%, rgb(47, 164, 218) 0, transparent 20%),
     radial-gradient(at 76% 18%, rgb(221, 214, 254) 0, transparent 89%),
     radial-gradient(at 30% 50%, rgb(159, 18, 57) 0, transparent 74%);
-}
+} */

@@ -1,6 +1,6 @@
 <div align="center">
     <div>
-        <img height="300px" src="./Assets/Raksha-AI.png" alt="Raksha AI Logo"/>
+        <img height="200px" src="./Assets/RAKSHA.svg" alt="Raksha AI Logo"/>
     </div>
     <div>
             <h3><b>Raksha AI</b></h3>

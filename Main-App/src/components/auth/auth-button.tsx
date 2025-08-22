@@ -115,16 +115,16 @@ export function AuthButton({
           {children}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-foreground/40 backdrop-blur-md border-none text-background">
         <DialogHeader>
           <DialogTitle className="text-center">Welcome</DialogTitle>
-          <DialogDescription className="text-center">
+          <DialogDescription className="text-center text-muted">
             Sign in to your account or create a new one
           </DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 bg-background/40">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
@@ -161,7 +161,11 @@ export function AuthButton({
                   disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-background hover:bg-background/80 text-foreground"
+                disabled={loading}
+              >
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
@@ -205,7 +209,11 @@ export function AuthButton({
                   disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full bg-background hover:bg-background/80 text-foreground"
+                disabled={loading}
+              >
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
             </form>
@@ -214,7 +222,7 @@ export function AuthButton({
 
         <Separator />
 
-        <div className="text-xs text-center text-muted-foreground">
+        <div className="text-xs text-center text-muted cursor-default">
           By continuing, you agree to our Terms of Service and Privacy Policy.
         </div>
       </DialogContent>
